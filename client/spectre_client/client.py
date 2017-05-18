@@ -1,0 +1,47 @@
+import sys
+import socket
+import select
+
+from spectre_client.constants import *
+from spectre_client import utils
+
+class Client():
+
+    def __init__(self, name, address):
+        self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        self.socket.connect(address)
+        self.name = name
+     
+    def run(self):
+        raise NotImplementedError()
+
+    def get_data(self):
+        length = None
+        buf = ""
+        while True:
+            data = self.socket.recv(BUF_SIZE)
+            if not data:
+                sys.exit()
+            buf += str(data, 'utf-8')
+            while True:
+                if length is None:
+                    if '#' not in buf:
+                        break
+                    length_str, ign, buf = buf.partition('#')
+                    length = int(length_str)
+
+                if len(buf) < length:
+                    break
+                return buf[:length]
+
+    def send_data(self, data):
+        self.socket.send(bytes(utils.proto_string(data), 'utf-8'))
+
+if __name__ == '__main__':
+    try:
+        client = Client('nikhil', ADDRESS)
+        client.run()
+    except (KeyboardInterrupt, SystemExit):
+        client.socket.close()
+        sys.exit(0)
