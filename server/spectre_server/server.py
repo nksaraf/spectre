@@ -2,12 +2,15 @@ import sys
 import socket
 import select
 import queue
+import blessings
 
 from spectre_server.constants import *
 from spectre_server import utils
+from spectre_server import protocol
 
 READ_ONLY = select.POLLIN | select.POLLPRI | select.POLLHUP | select.POLLERR
 READ_WRITE = READ_ONLY | select.POLLOUT
+term = blessings.Terminal()
 
 class Spectre():
 
@@ -17,9 +20,11 @@ class Spectre():
         server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         server.bind(self.address)
         server.listen(5)
-        self.log('Serving at {}:{}'.format(IP, PORT))
+        self.handler = protocol.ProtocolHandler(self)
+        self.log('Serving at {}:{}'.format(IP, PORT), 'config')
+        self.obj = self.socket_obj(server, False)
         self.socket_map = {
-            server.fileno(): self.socket_obj(server, False),
+            server.fileno(): self.obj,
         }
         self.server = server
         self.poller = select.poll()
@@ -31,15 +36,15 @@ class Spectre():
             for fd, flag in events:
                 client = self.socket_map[fd]
                 if flag & (select.POLLIN | select.POLLPRI):
-                    if client["socket"] is self.server:
+                    if client["role"] == 'server':
                         self.new_client()
                     else:
-                        data = self.get_data(client["socket"])
+                        data = self.get_data(client)
                         if data is not None:
-                            self.log('Received from {}: {}'.format(client["socket"].getpeername(), data))
-                            self.handle(client, data)
+                            self.log('Received from {}: {}'.format(client["name"], data), 'recv')
+                            self.handler.handle(client, data)
                 elif flag & (select.POLLHUP | select.POLLERR):
-                    self.close_connection(client["socket"])
+                    self.close_connection(client)
                 elif flag & select.POLLOUT:
                     # Socket is ready to send data, if there is any to send.
                     try:
@@ -47,7 +52,7 @@ class Spectre():
                     except queue.Empty:
                         pass
                     else:
-                        client["socket"].send(bytes(utils.proto_string(to_send), 'utf-8'))
+                        client["socket"].send(to_send)
                 else:
                     pass
 
@@ -55,7 +60,7 @@ class Spectre():
         length = None
         buf = ""
         while True:
-            data = client.recv(BUF_SIZE)
+            data = client["socket"].recv(BUF_SIZE)
             if not data:
                 self.close_connection(client)
                 return None
@@ -75,36 +80,50 @@ class Spectre():
         socket, address = self.server.accept()
         self.socket_map[socket.fileno()] = self.socket_obj(socket)
         self.poller.register(socket, READ_WRITE)
-        self.log('New connection made at {}'.format(address))
+        self.log('New connection made at {}'.format(address), 'new_client')
 
     def close_connection(self, client):
-        self.poller.unregister(client)
-        self.socket_map[client.fileno()] = None
-        client.close()
-        self.log('Closing connection..')
+        self.log('Closing connection with {}'.format(client["name"]), 'closing')
+        self.poller.unregister(client["socket"])
+        self.socket_map[client["socket"].fileno()] = None
+        client["socket"].close()
 
     def socket_obj(self, socket, client=True):
         if client:
             obj = {
-                "name": "client",
+                "name": socket.getpeername(),
+                "role": "client",
+                "sub-role": "client",
                 "socket": socket,
                 "write_queue": queue.Queue()
             }
         else:
             obj = {
-                "name": "server",
+                "name": "spectre",
+                "role": "server",
                 "socket": socket,
             }
         return obj
 
     def handle(self, client, data):
         for key, value in self.socket_map.items():
-            if not (value is None or value["name"] == 'server'):
-                self.log('Sending to {}: {}'.format(value["socket"].getpeername(), data))
+            if not (value is None or value["role"] == 'server'):
+                self.log('Sending to {}: {}'.format(value["socket"].getpeername(), data), 'sent')
                 value["write_queue"].put('{} said {}'.format(client["socket"].getpeername(), data))
 
-    def log(self, message):
-        print('[+] {}'.format(message))
+    def log(self, message, category):
+        if category == 'config':
+            print('[+] {}'.format(message))
+        elif category == 'new_client':
+            print(term.green('[+] {}'.format(message)))
+        elif category == 'recv':
+            print(term.magenta('[+] {}'.format(message)))
+        elif category == 'sent':
+            print(term.blue('[+] {}'.format(message)))
+        elif category == 'closing':
+            print(term.red('[+] {}'.format(message)))
+        else:
+            print('[+] {}'.format(message))
 
 if __name__ == '__main__':
     try:

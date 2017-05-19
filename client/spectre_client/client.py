@@ -1,6 +1,7 @@
 import sys
 import socket
 import select
+import json
 
 from spectre_client.constants import *
 from spectre_client import utils
@@ -12,6 +13,8 @@ class Client():
         self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.socket.connect(address)
         self.name = name
+        self.properties = {}
+        self.properties["name"] = name
      
     def run(self):
         raise NotImplementedError()
@@ -33,10 +36,14 @@ class Client():
 
                 if len(buf) < length:
                     break
-                return buf[:length]
+                return json.loads(buf[:length])
 
-    def send_data(self, data):
-        self.socket.send(bytes(utils.proto_string(data), 'utf-8'))
+    def send_data(self, action, data):
+        to_send = {}
+        to_send["action"] = action
+        to_send["content"] = data
+        to_send = {**to_send, **self.properties}
+        self.socket.send(bytes(utils.proto_string(json.dumps(to_send)), 'utf-8'))
 
 if __name__ == '__main__':
     try:
