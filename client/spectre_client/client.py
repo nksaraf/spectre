@@ -3,8 +3,8 @@ import socket
 import select
 import json
 
-from .constants import *
-from . import utils
+from constants import *
+import utils
 
 class Client():
 

@@ -3,9 +3,9 @@ import socket
 import select
 import time
 
-from .constants import *
-from . import client
-from . import utils
+from constants import *
+import client
+import utils
 
 class TerminalClient(client.Client):
 

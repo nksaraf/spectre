@@ -1,6 +1,6 @@
 NAME = 'spectre'
 
-IP = 'localhost'
+IP = '10.147.9.149'
 PORT = 6969
 TIMEOUT = 1000
 ADDRESS = (IP, PORT)

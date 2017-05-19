@@ -5,9 +5,9 @@ import threading
 import sys
 import socket
 
-from .constants import *
-from . import utils
-from . import client
+from constants import *
+import utils
+import client
 
 class MessengerClient(client.Client):
 
