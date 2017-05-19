@@ -5,9 +5,9 @@ import threading
 import sys
 import socket
 
-from spectre_client.constants import *
-from spectre_client import utils
-from spectre_client import client
+from .constants import *
+from . import utils
+from . import client
 
 class MessengerClient(client.Client):
 

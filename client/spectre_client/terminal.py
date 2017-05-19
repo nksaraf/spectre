@@ -3,9 +3,9 @@ import socket
 import select
 import time
 
-from spectre_client.constants import *
-from spectre_client import client
-from spectre_client import utils
+from .constants import *
+from . import client
+from . import utils
 
 class TerminalClient(client.Client):
 

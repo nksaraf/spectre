@@ -1,8 +1,6 @@
-from enum import Enum
-
 NAME = 'spectre'
 
-IP = 'localhost'
+IP = '10.147.9.149'
 PORT = 6969
 ADDRESS = (IP, PORT)
 BUF_SIZE = 4096

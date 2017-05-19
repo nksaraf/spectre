@@ -1,7 +1,7 @@
 import requests
 import json
 
-from spectre_server.constants import *
+from .constants import *
 
 def get_location():
 	location = requests.get(GEO_API)

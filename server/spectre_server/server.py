@@ -4,9 +4,9 @@ import select
 import queue
 import blessings
 
-from spectre_server.constants import *
-from spectre_server import utils
-from spectre_server import protocol
+from .constants import *
+from . import utils
+from . import protocol
 
 READ_ONLY = select.POLLIN | select.POLLPRI | select.POLLHUP | select.POLLERR
 READ_WRITE = READ_ONLY | select.POLLOUT

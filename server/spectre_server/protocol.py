@@ -1,9 +1,9 @@
 import re
 import json
 
-from spectre_server.constants import *
-from spectre_server import utils
-from spectre_server import services
+from .constants import *
+from . import utils
+from . import services
 
 class ProtocolHandler():
 

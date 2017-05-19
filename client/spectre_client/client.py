@@ -3,8 +3,8 @@ import socket
 import select
 import json
 
-from spectre_client.constants import *
-from spectre_client import utils
+from .constants import *
+from . import utils
 
 class Client():
 
