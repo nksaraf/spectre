@@ -1,0 +1,7 @@
+blessings==1.6
+click==6.7
+Flask==0.12.2
+gTTS==1.2.0
+gTTS-token==1.1.1
+requests==2.14.2
+SpeechRecognition==3.6.5
