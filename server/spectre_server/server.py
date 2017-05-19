@@ -4,9 +4,9 @@ import select
 import queue
 import blessings
 
-from .constants import *
-from . import utils
-from . import protocol
+from constants import *
+import utils
+import protocol
 
 READ_ONLY = select.POLLIN | select.POLLPRI | select.POLLHUP | select.POLLERR
 READ_WRITE = READ_ONLY | select.POLLOUT

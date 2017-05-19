@@ -1,9 +1,9 @@
 import re
 import json
 
-from .constants import *
-from . import utils
-from . import services
+from constants import *
+import utils
+import services
 
 class ProtocolHandler():
 

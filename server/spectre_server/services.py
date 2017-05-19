@@ -1,7 +1,7 @@
 import requests
 import json
 
-from .constants import *
+from constants import *
 
 def get_location():
 	location = requests.get(GEO_API)
