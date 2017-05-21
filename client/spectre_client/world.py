@@ -28,6 +28,8 @@ class World(object):
         GPIO.setwarnings(True)
         GPIO.setup(G_LIGHT, GPIO.OUT)
         GPIO.setup(G_FAN, GPIO.OUT)
+        GPIO.output(G_LIGHT, GPIO.LOW)
+        GPIO.output(G_FAN, GPIO.LOW)
         self.client = client
     
     def handle(self, data):
