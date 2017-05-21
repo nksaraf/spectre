@@ -40,7 +40,7 @@ class SpectreProtocolHandler():
                 action = "on"
             else:
                 action = "off"
-            worlds = self.server.get_client("world")
+            worlds = self.server.get_client("env")
             if len(worlds) == 0:
                 self.respond(False, Action.REPLY, "Sorry. Couldnt find the lights", client, "world not connected")
                 return
