@@ -38,7 +38,7 @@ class SpectreProtocolHandler():
             self.respond(True, Action.REPLY, weather, client)
         appl = ["light", "fan"]
         for appli in appl:
-            if appl in data["content"]:
+            if appli in data["content"]:
                 if "on" in data["content"]:
                     action = "on"
                 else:
