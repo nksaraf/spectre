@@ -1,6 +1,6 @@
 import sys
 import socket
-import gpio as GPIO
+import RPIO as GPIO
 
 from constants import *
 import client
