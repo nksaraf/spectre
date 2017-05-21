@@ -36,10 +36,10 @@ class World(object):
                 if data["content"]["action"] == "on":
                     GPIO.output(G_LIGHT, GPIO.HIGH)
                 elif data["content"]["action"] == "off":
-                    GPIO.output(G_FAN, GPIO.LOW)
+                    GPIO.output(G_LIGHT, GPIO.LOW)
             if data["content"]["object"] == "fans":
                 if data["content"]["action"] == "on":
-                    GPIO.output(G_LIGHT, GPIO.HIGH)
+                    GPIO.output(G_FAN, GPIO.HIGH)
                 elif data["content"]["action"] == "off":
                     GPIO.output(G_FAN, GPIO.LOW)
 if __name__ == '__main__':
