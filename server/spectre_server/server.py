@@ -41,7 +41,6 @@ class Spectre():
                     else:
                         data = self.get_data(client)
                         if data is not None:
-                            self.log('Received from {}: {}'.format(client["name"], data), 'recv')
                             self.handler.handle(client, data)
                 elif flag & (select.POLLHUP | select.POLLERR):
                     self.close_connection(client)

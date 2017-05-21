@@ -13,6 +13,7 @@ class SpectreProtocolHandler():
     def handle(self, client, request):
         try:
             data = json.loads(request)
+            self.log('{} [{}]: {}'.format(data["name"], data["action"].upper(), data["content"]), 'recv')
             if data is None:
                 raise ProtocolError(request, 'Not json format', 'Fuck off')
             if data["action"] == ClientAction.ID:
@@ -78,14 +79,15 @@ class SpectreProtocolHandler():
         response["action"] = action
         response["for"] = client["name"]
         response["name"] = self.server.obj["name"]
+        response["content"] = reply
         if success:
             response["status"] = 'OK'
+            self.server.log('spectre -> {} [{}]: {}'.format(client["name"], action.upper(), reply), 'sent')
         else:
             response["status"] = "ERROR"
             response["error"] = error
-        response["content"] = reply
+            self.server.log('spectre -> {} [{}]: {}'.format(client["name"], "ERROR", reply), 'sent')
         to_send = json.dumps(response)
-        self.server.log('Sending to {}: {}'.format(client["name"], to_send), 'sent')
         client["write_queue"].put(bytes(utils.proto_string(to_send), 'utf-8'))
 
     def _respond(self, client, response):
