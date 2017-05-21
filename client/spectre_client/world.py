@@ -34,8 +34,10 @@ class World(object):
         if data["action"] == ServerAction.COMMAND:
             if data["content"]["object"] == "lights":
                 if data["content"]["action"] == "on":
+                    print("lights on")
                     GPIO.output(G_LIGHT, GPIO.HIGH)
                 elif data["content"]["action"] == "off":
+                    print("lights off")
                     GPIO.output(G_LIGHT, GPIO.LOW)
             if data["content"]["object"] == "fans":
                 if data["content"]["action"] == "on":
