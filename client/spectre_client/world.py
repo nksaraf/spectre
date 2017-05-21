@@ -12,7 +12,7 @@ class WorldClient(client.Client):
         client.Client.__init__(self, "world", "env", address, world)
         self.properties["os"] = sys.platform
 
-    def run():
+    def run(self):
         while True:
             try:
                 data = self.get_data()
