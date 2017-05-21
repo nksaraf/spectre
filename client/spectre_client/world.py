@@ -9,7 +9,7 @@ import error
 class WorldClient(client.Client):
     def __init__(self, address):
         world = World(self)
-        Client.__init__(self, "world", "env", address, world)
+        client.Client.__init__(self, "world", "env", address, world)
         self.properties["os"] = sys.platform
 
     def run():
