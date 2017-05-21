@@ -13,7 +13,7 @@ class SpectreProtocolHandler():
     def handle(self, client, request):
         try:
             data = json.loads(request)
-            self.log('{} [{}]: {}'.format(data["name"], data["action"].upper(), data["content"]), 'recv')
+            self.server.log('{} [{}]: {}'.format(data["name"], data["action"].upper(), data["content"]), 'recv')
             if data is None:
                 raise ProtocolError(request, 'Not json format', 'Fuck off')
             if data["action"] == ClientAction.ID:
