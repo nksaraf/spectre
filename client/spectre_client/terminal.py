@@ -6,32 +6,27 @@ import time
 from constants import *
 import client
 import utils
+import error
 
 class TerminalClient(client.Client):
 
     def __init__(self, name, address):
-        client.Client.__init__(self, name, address)
+        client.Client.__init__(self, name, "user", address, None)
         self.properties["os"] = sys.platform
-        self.properties["type"] = "user"
   
     def run(self):
-        while True:
-            self.send_data(Action.ID, "")
-            data = self.get_data()
-            if data["action"] == ServerAction.ID and data["status"] == 'OK':
-                print('{}: [{}] {}'.format(data["name"], data["status"], data["reply"]))
-                break
-            else:
-                time.sleep(2)
         while True:
             sys.stdout.write('> '); sys.stdout.flush()
             socks = [sys.stdin, self.socket]
             readable, _, _ = select.select(socks, [], [])
-            
             for conn in readable:
                 if conn == self.socket:
-                    data = self.get_data()
-                    print('{}: [{}] {}'.format(data["name"], data["status"], data["reply"]))
+                    try:
+                        data = self.get_data()
+                        if data["action"] == ServerAction.REPLY:
+                            print('{}: [{}] {}'.format(data["name"], data["status"], data["content"]))
+                    except error.ConnectionClosedError:
+                        sys.exit()
                 else:
                     data = sys.stdin.readline()
                     self.send_data(Action.TALK, data.strip())

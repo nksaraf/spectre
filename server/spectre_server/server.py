@@ -20,7 +20,7 @@ class Spectre():
         server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         server.bind(self.address)
         server.listen(5)
-        self.handler = protocol.ProtocolHandler(self)
+        self.handler = protocol.SpectreProtocolHandler(self)
         self.log('Serving at {}:{}'.format(IP, PORT), 'config')
         self.obj = self.socket_obj(server, False)
         self.socket_map = {
@@ -124,6 +124,13 @@ class Spectre():
             print(term.red('[+] {}'.format(message)))
         else:
             print('[+] {}'.format(message))
+
+    def get_client(self, role):
+        relevant = []
+        for key, client in self.socket_map.items():
+            if client["role"] == "client" and client["sub-role"] == role:
+                relevant.append(client)
+        return relevant
 
 if __name__ == '__main__':
     try:

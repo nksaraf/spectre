@@ -5,16 +5,30 @@ import json
 
 from constants import *
 import utils
+import error
 
 class Client():
 
-    def __init__(self, name, address):
+    def __init__(self, name, role, address, handler):
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.socket.connect(address)
         self.name = name
         self.properties = {}
         self.properties["name"] = name
+        self.properties["type"] = role
+        self.handler = handler
+        self.id()
+
+    def id(self):
+        while True:
+            self.send_data(Action.ID, "")
+            data = self.get_data()
+            if data["action"] == ServerAction.ID and data["status"] == 'OK':
+                print('{}: [{}] {}'.format(data["name"], data["status"], data["content"]))
+                break
+            else:
+                time.sleep(2)
      
     def run(self):
         raise NotImplementedError()
@@ -25,7 +39,7 @@ class Client():
         while True:
             data = self.socket.recv(BUF_SIZE)
             if not data:
-                sys.exit()
+                raise error.ConnectionClosedError()
             buf += str(data, 'utf-8')
             while True:
                 if length is None:
@@ -36,7 +50,10 @@ class Client():
 
                 if len(buf) < length:
                     break
-                return json.loads(buf[:length])
+                try:
+                    return json.loads(buf[:length])
+                except:
+                    return buf[:length]
 
     def send_data(self, action, data):
         to_send = {}
@@ -47,7 +64,7 @@ class Client():
 
 if __name__ == '__main__':
     try:
-        client = Client('nikhil', ADDRESS)
+        client = Client('nikhil', 'user', ADDRESS, None)
         client.run()
     except (KeyboardInterrupt, SystemExit):
         client.socket.close()

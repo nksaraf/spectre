@@ -22,3 +22,6 @@ class ServerAction():
 	COMMAND = 'cmd'
 	GET = 'get'
 	COMPLAIN = 'complain'
+
+G_LIGHT = 8
+G_FAN = 10

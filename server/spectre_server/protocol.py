@@ -5,7 +5,7 @@ from constants import *
 import utils
 import services
 
-class ProtocolHandler():
+class SpectreProtocolHandler():
 
     def __init__(self, server):
         self.server = server
@@ -29,11 +29,29 @@ class ProtocolHandler():
         client["name"] = data["name"]
         client["sub-role"] = data["type"]
         self.respond(True, Action.ID, 'Hi, I am Spectre.', client)
+        return
 
     def _understand(self, client, data):
         if "weather" in data["content"]:
             weather = services.get_weather()
             self.respond(True, Action.REPLY, weather, client)
+        if "lights" in data["content"]:
+            if "on" in data["content"]:
+                action = "on"
+            else:
+                action = "off"
+            worlds = self.server.get_client("world")
+            if len(worlds) == 0:
+                self.respond(False, Action.REPLY, "Sorry. Couldnt find the lights", client, "world not connected")
+                return
+            content = {
+                "object": "lights",
+                "action": action
+            }
+            self.respond(True, Action.REPLY, "Switching lights " + action, client)
+            for world in worlds:
+                self.respond(True, Action.COMMAND, content, world)
+
         
 
 #         request = Request(request)
@@ -65,7 +83,7 @@ class ProtocolHandler():
         else:
             response["status"] = "ERROR"
             response["error"] = error
-        response["reply"] = reply
+        response["content"] = reply
         to_send = json.dumps(response)
         self.server.log('Sending to {}: {}'.format(client["name"], to_send), 'sent')
         client["write_queue"].put(bytes(utils.proto_string(to_send), 'utf-8'))
