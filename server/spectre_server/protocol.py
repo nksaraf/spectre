@@ -36,22 +36,24 @@ class SpectreProtocolHandler():
         if "weather" in data["content"]:
             weather = services.get_weather()
             self.respond(True, Action.REPLY, weather, client)
-        if "lights" in data["content"]:
-            if "on" in data["content"]:
-                action = "on"
-            else:
-                action = "off"
-            worlds = self.server.get_client("env")
-            if len(worlds) == 0:
-                self.respond(False, Action.REPLY, "Sorry. Couldnt find the lights", client, "world not connected")
-                return
-            content = {
-                "object": "lights",
-                "action": action
-            }
-            self.respond(True, Action.REPLY, "Switching lights " + action, client)
-            for world in worlds:
-                self.respond(True, Action.COMMAND, content, world)
+        appl = ["light", "fan"]
+        for appli in appl:
+            if appl in data["content"]:
+                if "on" in data["content"]:
+                    action = "on"
+                else:
+                    action = "off"
+                worlds = self.server.get_client("env")
+                if len(worlds) == 0:
+                    self.respond(False, Action.REPLY, "Sorry. Couldnt find the {}s".format(appli), client, "world not connected")
+                    return
+                content = {
+                    "object": appli,
+                    "action": action
+                }
+                self.respond(True, Action.REPLY, "Switching {}s {}".format(appli, action), client)
+                for world in worlds:
+                    self.respond(True, Action.COMMAND, content, world)
 
         
 
