@@ -127,7 +127,7 @@ class Spectre():
     def get_client(self, role):
         relevant = []
         for key, client in self.socket_map.items():
-            if client["role"] == "client" and client["sub-role"] == role:
+            if not client is None and client["role"] == "client" and client["sub-role"] == role:
                 relevant.append(client)
         return relevant
 
