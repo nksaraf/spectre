@@ -26,8 +26,8 @@ class World(object):
     def __init__(self, client):
         GPIO.setmode(GPIO.BCM)
         GPIO.setwarnings(False)
-        channels = [G_LIGHT, G_FAN]
-        GPIO.setup(channels, GPIO.OUT, initial=GPIO.LOW)
+        GPIO.setup(G_LIGHT, GPIO.OUT, initial=GPIO.LOW)
+        GPIO.setup(G_FAN, GPIO.OUT, initial=GPIO.LOW)
         self.client = client
     
     def handle(self, data):
