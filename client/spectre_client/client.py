@@ -59,7 +59,7 @@ class Client():
         to_send = {}
         to_send["action"] = action
         to_send["content"] = data
-        to_send = {**to_send, **self.properties}
+        to_send = {to_send, **self.properties}
         self.socket.send(bytes(utils.proto_string(json.dumps(to_send)), 'utf-8'))
 
 if __name__ == '__main__':
