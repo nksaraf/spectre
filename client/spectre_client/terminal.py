@@ -2,12 +2,14 @@ import sys
 import socket
 import select
 import time
+import blessings
 
 from constants import *
 import client
 import utils
 import error
 
+term = blessings.Terminal()
 class TerminalClient(client.Client):
 
     def __init__(self, name, address):
@@ -24,7 +26,7 @@ class TerminalClient(client.Client):
                     try:
                         data = self.get_data()
                         if data["action"] == ServerAction.REPLY:
-                            print('{}: [{}] {}'.format(data["name"], data["status"], data["content"]))
+                            print(term.green('{}: [{}] {}'.format(data["name"], data["status"], data["content"]))
                     except error.ConnectionClosedError:
                         sys.exit()
                 else:
