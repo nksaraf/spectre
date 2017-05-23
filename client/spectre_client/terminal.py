@@ -26,7 +26,7 @@ class TerminalClient(client.Client):
                     try:
                         data = self.get_data()
                         if data["action"] == ServerAction.REPLY:
-                            print(term.green('{}: [{}] {}'.format(data["name"], data["status"], data["content"]))
+                            print(term.green('{}: [{}] {}'.format(data["name"], data["status"], data["content"])))
                     except error.ConnectionClosedError:
                         sys.exit()
                 else:
