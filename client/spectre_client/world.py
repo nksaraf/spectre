@@ -5,6 +5,7 @@ import RPIO as GPIO
 from constants import *
 import client
 import error
+import interface
 
 class WorldClient(client.Client):
     def __init__(self, address):
@@ -24,8 +25,8 @@ class WorldClient(client.Client):
 class World(object):
 
     def __init__(self):
-        simple_appliance = SimpleAppliance()
-        music = Music()
+        simple_appliance = interface.SimpleAppliance()
+        music = interface.Music()
 
     def handle(self, data):
         if data["action"] == ServerAction.COMMAND:
