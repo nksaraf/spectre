@@ -1,4 +1,5 @@
 import RPIO as GPIO
+from constants import *
 
 class Interface():
     pass
