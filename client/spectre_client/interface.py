@@ -1,3 +1,5 @@
+import RPIO as GPIO
+
 class Interface():
     pass
 
