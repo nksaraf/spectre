@@ -6,7 +6,7 @@ PORT = 6969
 ADDRESS = (DEFAULT_IP, PORT)
 BUF_SIZE = 1024
 PROTOCOL = '{}://'.format(NAME)
-MOPIDY_IP = 
+MOPIDY_IP = '192.168.1.69'
 
 GEO_API = 'http://freegeoip.net/json'
 
