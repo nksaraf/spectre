@@ -10,8 +10,9 @@ import utils
 import error
 
 term = blessings.Terminal()
-class TerminalClient(client.Client):
 
+class TerminalClient(client.Client):
+    
     def __init__(self, name, address):
         client.Client.__init__(self, name, "user", address, None)
         self.properties["os"] = sys.platform
@@ -34,8 +35,14 @@ class TerminalClient(client.Client):
                     self.send_data(Action.TALK, data.strip())
 
 if __name__ == '__main__':
+    address = ADDRESS
+    me = DEFAULT_ME
+    if len(sys.argv) > 1:
+        address = (sys.argv[1], PORT)
+    if len(sys.argv) > 2:
+        me = sys.argv[2]
     try:
-        client = TerminalClient('nikhil', ADDRESS)
+        client = TerminalClient(me, address)
         client.run()
     except (KeyboardInterrupt, SystemExit):
         client.socket.close()

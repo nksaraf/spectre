@@ -1,10 +1,12 @@
 NAME = 'spectre'
 
-IP = '10.147.9.149'
+DEFAULT_IP = '192.168.1.69'
+DEFAULT_ME = 'nikhil'
 PORT = 6969
-ADDRESS = (IP, PORT)
-BUF_SIZE = 4096
+ADDRESS = (DEFAULT_IP, PORT)
+BUF_SIZE = 1024
 PROTOCOL = '{}://'.format(NAME)
+MOPIDY_IP = 
 
 GEO_API = 'http://freegeoip.net/json'
 

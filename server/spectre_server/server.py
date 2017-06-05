@@ -14,14 +14,14 @@ term = blessings.Terminal()
 
 class Spectre():
 
-    def __init__(self):
-        self.address = ADDRESS
+    def __init__(self, address):
+        self.address = address
         server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         server.bind(self.address)
         server.listen(5)
         self.handler = protocol.SpectreProtocolHandler(self)
-        self.log('Serving at {}:{}'.format(IP, PORT), 'config')
+        self.log('Serving at {}:{}'.format(self.address[0], PORT), 'config')
         self.obj = self.socket_obj(server, False)
         self.socket_map = {
             server.fileno(): self.obj,
@@ -132,8 +132,11 @@ class Spectre():
         return relevant
 
 if __name__ == '__main__':
+    address = ADDRESS
+    if len(sys.argv) > 1:
+        address = (sys.argv[1], PORT)
     try:
-        spectre = Spectre()
+        spectre = Spectre(address)
         spectre.serve()
     except (KeyboardInterrupt, SystemExit):
         spectre.server.close()

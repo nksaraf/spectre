@@ -55,27 +55,6 @@ class SpectreProtocolHandler():
                 for world in worlds:
                     self.respond(True, Action.COMMAND, content, world)
 
-        
-
-#         request = Request(request)
-#         if request.error is None:
-#             if not client.authorized and OP_ID in request.tags:
-#                 response = ProtocolHandler.authorize(client, request) 
-#             elif client.authorized:
-#                 response = ProtocolHandler.set_response(True, 'All good!', request=request)
-#             else:
-#                 response = ProtocolHandler.set_response(False, 'Who are you?', 'unauthorized', request=request)
-#         else:
-#             response = ProtocolHandler.set_response(False, 'Something is wrong', 'protocol error', request=request)
-#         return response
-
-#     @staticmethod
-#     def authorize(client, request):
-#         response = ProtocolHandler.set_response(True, 'Hi, I am {}. Nice to meet you.'.format(NAME), request=request)
-#         client.nickname = request.body
-#         client.authorized = True
-#         return response
-
     def respond(self, success, action, reply, client, error='', request=None):
         response = {}
         response["action"] = action
@@ -94,34 +73,6 @@ class SpectreProtocolHandler():
 
     def _respond(self, client, response):
         pass
-
-# class Request():
-#     def __init__(self, request):
-#         self.request = request
-#         try:
-#             self.parse_request(request)
-#             self.error = None
-#         except ProtocolError as e:
-#             self.protocol = ''
-#             self.body = ''
-#             self.tags = []
-#             self.error = e
-
-#     def parse_request(self, request):
-#         parsed = re.search(REQUEST_REGEX, request)
-#         if parsed is None:
-#             raise ProtocolError(request, 'error', 'msg')
-#         parts = parsed.groupdict()
-#         self.protocol = parts["proto"]
-#         self.body = parts["body"]
-#         self.tags = []
-#         tags = re.findall(TAGS_REGEX, parts["tags"])
-#         for tag in tags:
-#             if tag[0] == '':
-#                 self.tags.append((tag[1], tag[2]))
-#             else:
-#                 self.tags.append(tag[0])
-
 
 class ProtocolError(Exception):
 

@@ -8,7 +8,7 @@ import error
 
 class WorldClient(client.Client):
     def __init__(self, address):
-        world = World(self)
+        world = World()
         client.Client.__init__(self, "world", "env", address, world)
         self.properties["os"] = sys.platform
 
@@ -23,15 +23,10 @@ class WorldClient(client.Client):
 
 class World(object):
 
-    def __init__(self, client):
-        GPIO.setmode(GPIO.BCM)
-        GPIO.setwarnings(True)
-        GPIO.setup(G_LIGHT, GPIO.OUT)
-        GPIO.setup(G_FAN, GPIO.OUT)
-        GPIO.output(G_LIGHT, GPIO.LOW)
-        GPIO.output(G_FAN, GPIO.LOW)
-        self.client = client
-    
+    def __init__(self):
+        simple_appliance = SimpleAppliance()
+        music = Music()
+
     def handle(self, data):
         if data["action"] == ServerAction.COMMAND:
             if data["content"]["object"] == "light":
@@ -46,9 +41,13 @@ class World(object):
                     GPIO.output(G_FAN, GPIO.HIGH)
                 elif data["content"]["action"] == "off":
                     GPIO.output(G_FAN, GPIO.LOW)
+
 if __name__ == '__main__':
+    address = ADDRESS
+    if len(sys.argv) > 1:
+        address = (sys.argv[1], PORT)
     try:
-        client = WorldClient(ADDRESS)
+        client = WorldClient(address)
         client.run()
     except (KeyboardInterrupt, SystemExit):
         client.socket.close()

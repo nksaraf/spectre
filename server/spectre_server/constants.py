@@ -1,11 +1,12 @@
 NAME = 'spectre'
 
-IP = '10.147.9.149'
+IP = '192.168.1.69'
 PORT = 6969
 TIMEOUT = 1000
 ADDRESS = (IP, PORT)
-BUF_SIZE = 4096
+BUF_SIZE = 1024
 PROTOCOL = '{}://'.format(NAME)
+MOPIDY_IP = '192.168.1.69'
 
 class ClientAction():
 	ID = 'id'
