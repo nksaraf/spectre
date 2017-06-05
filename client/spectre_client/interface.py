@@ -3,8 +3,8 @@ class Interface():
 
 class SimpleAppliance(Interface):
 
-	def __init__(self):
-		GPIO.setmode(GPIO.BCM)
+    def __init__(self):
+        GPIO.setmode(GPIO.BCM)
         GPIO.setwarnings(True)
         GPIO.setup(G_LIGHT, GPIO.OUT)
         GPIO.setup(G_FAN, GPIO.OUT)
@@ -12,10 +12,10 @@ class SimpleAppliance(Interface):
         GPIO.output(G_FAN, GPIO.LOW)
 
     def handle(self, command):
-    	pass
+        pass
 
 
 class Music(Interface):
 
-	def handle(self, command):
-		pass
+    def handle(self, command):
+        pass
